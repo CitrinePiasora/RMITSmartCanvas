@@ -1,6 +1,5 @@
 package com.controllers;
 
-import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,11 +12,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -30,13 +27,12 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import java.awt.image.RenderedImage;
-import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
 
 import com.application.Main;
 import com.models.User;
@@ -45,23 +41,23 @@ public class BoardController implements Initializable {
 
     @FXML private ImageView profilePicture;
     @FXML private Label nameLabel;
-    @FXML private Canvas canvas;
-    @FXML private Canvas FXCanvas;
-    @FXML private Rectangle canvasBackground;
     @FXML private Slider zoomSlider;
     @FXML private Label zoomPercent;
     @FXML private MenuItem saveButton;
     @FXML private MenuItem clearButton;
     @FXML private StackPane zoomPane;
-    @FXML private BorderPane borderPain;
-    
+    @FXML private Pane canvasPane;
+    @FXML private Canvas FXCanvas;
+
     private User currentUser;
-    private double percentageCalc;
+    private GraphicsContext gcF;
+    private double percentageCalc = 1.0;
     private int canvasH, canvasW;
-    private GraphicsContext gcB, gcF;
     private boolean drawoval = false, drawrectangle = false, drawtext = false;
     double startX, startY, lastX, lastY, originX, originY;
     double wh, hg;
+
+    private Node currentNode;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -72,21 +68,20 @@ public class BoardController implements Initializable {
         nameLabel.setText(user.getFullName());
         
         // Initialize Canvas Properties
-        this.canvas.setHeight(canvasHeight);
-        this.canvas.setWidth(canvasWidth);
-        this.FXCanvas.setHeight(canvasHeight);
-        this.FXCanvas.setWidth(canvasWidth);
-        this.canvasBackground.setHeight(canvasHeight);
-        this.canvasBackground.setWidth(canvasWidth);
-        this.canvasBackground.setVisible(canvasActive);
         this.canvasH = canvasHeight;
         this.canvasW = canvasWidth;
-        this.gcB = canvas.getGraphicsContext2D();
-        this.gcF = FXCanvas.getGraphicsContext2D();
+        this.canvasPane.maxHeight(canvasHeight);
+        this.canvasPane.maxWidth(canvasWidth);
+        this.canvasPane.setMinHeight(canvasHeight);
+        this.canvasPane.setMinWidth(canvasWidth);
+        this.FXCanvas.setHeight(canvasHeight);
+        this.FXCanvas.setWidth(canvasWidth);
+        this.gcF = this.FXCanvas.getGraphicsContext2D();
 
-        // Initialize state of menu items
+        // Initialize state of menu items and canvas
         this.clearButton.setDisable(!canvasActive);
         this.saveButton.setDisable(!canvasActive);
+        this.canvasPane.setVisible(canvasActive);
 
         // Initialize session
         this.currentUser = user; 
@@ -169,13 +164,12 @@ public class BoardController implements Initializable {
 
     @FXML
     void clearCanvas(ActionEvent event) {
-        gcF.clearRect(0, 0, this.canvasW, this.canvasH);
-        gcB.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        canvasPane.getChildren().clear();
     }
 
     @FXML
     void deleteElement(ActionEvent event) {
-
+        canvasPane.getChildren().remove(this.currentNode);
     }
 
     @FXML
@@ -190,23 +184,23 @@ public class BoardController implements Initializable {
 
         if(file != null) {
             try {
-                ObservableList<Node> canvasElements = zoomPane.getChildren();
+                ObservableList<Node> canvasElements = canvasPane.getChildren();
 
+                canvasPane.setScaleX(1);
+                canvasPane.setScaleY(1);
                 for(Node element : canvasElements) {
                     element.setScaleX(1);
                     element.setScaleY(1);
                 }
 
-                // WritableImage exporting = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
-                // canvas.snapshot(null, exporting);
-                // RenderedImage exportedFile = SwingFXUtils.fromFXImage(exporting, null);
-                // ImageIO.write(exportedFile, "png", file);
-
-                WritableImage exporting = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
-                borderPain.getCenter().snapshot(null, exporting);
+                WritableImage exporting = new WritableImage(canvasW, canvasH);
+                canvasPane.snapshot(null, exporting);
                 RenderedImage exportedFile = SwingFXUtils.fromFXImage(exporting, null);
                 ImageIO.write(exportedFile, "png", file);
 
+
+                canvasPane.setScaleX(percentageCalc);
+                canvasPane.setScaleY(percentageCalc);
                 for(Node element : canvasElements) {
                     element.setScaleX(percentageCalc);
                     element.setScaleY(percentageCalc);
@@ -240,6 +234,11 @@ public class BoardController implements Initializable {
     }
 
     @FXML
+    void canvasColor(ActionEvent Event) {
+        canvasPane.setStyle("-fx-background-color: pink; -fx-border-color: gray");
+    }
+
+    @FXML
     private void onMousePressedListener(MouseEvent e) {
         this.startX = e.getX();
         this.startY = e.getY();
@@ -250,7 +249,13 @@ public class BoardController implements Initializable {
     }
 
     @FXML
-    private void onMouseDraggedListener(MouseEvent e) {
+    private void FXMousePress(MouseEvent e) {
+        this.startX = e.getX();
+        this.startY = e.getY();
+    }
+
+    @FXML
+    private void FXMouseDrag(MouseEvent e) {
         this.lastX = e.getX();
         this.lastY = e.getY();
 
@@ -262,7 +267,7 @@ public class BoardController implements Initializable {
     }
 
     @FXML
-    private void onMouseReleaseListener(MouseEvent e) {
+    private void FXMouseRelease(MouseEvent e) {
         if(drawrectangle) {
             drawRect();
         } else if(drawoval) {
@@ -276,18 +281,47 @@ public class BoardController implements Initializable {
         System.out.println("Out of canvas bounds");
     }
 
-    private void drawOval() {
-        gcB.setLineWidth(10);
+    private void setCurrentNode(Node node) {
+        this.currentNode = node;
+    }
 
-        gcB.setFill(Color.BLACK);
-        gcB.fillOval(startX, startY, this.wh, this.hg);
+    private void makeDraggable(Node node) {
+        node.setOnMousePressed(e -> {
+            originX = e.getSceneX() - node.getTranslateX();
+            originY = e.getSceneY() - node.getTranslateY();
+
+            setCurrentNode(node);
+        });
+
+        node.setOnMouseDragged(e -> {
+            node.setTranslateX(e.getSceneX() - originX);
+            node.setTranslateY(e.getSceneY() - originY);
+        });
+    }
+    
+    private void drawOval() {
+        this.wh = (lastX - startX) / 2;
+        this.hg = (lastY - startY) / 2;
+
+        double centerX = (startX + lastX) / 2, centerY = (startY + lastY) / 2 ;
+
+        Ellipse newOval = new Ellipse(centerX, centerY, wh, hg);
+        newOval.setFill(Color.AQUAMARINE);
+        newOval.toFront();
+        makeDraggable(newOval);
+
+        canvasPane.getChildren().add(newOval);
     }
 
     private void drawRect() {
-        gcB.setLineWidth(10);
+        this.wh = lastX - startX;
+        this.hg = lastY - startY;
+        Rectangle newRect = new Rectangle(startX, startY, this.wh, this.hg);
+        newRect.setFill(Color.BLACK);
+        newRect.toFront();
+        makeDraggable(newRect);
 
-        gcB.setFill(Color.GRAY);
-        gcB.fillRect(startX, startY, this.wh, this.hg);
+        canvasPane.getChildren().add(newRect);
     }
 
     private void drawtextBox() {
@@ -296,25 +330,10 @@ public class BoardController implements Initializable {
         textBox.setStyle("-fx-border-color: black");
         textBox.toFront();
 
-        textBox.setOnMousePressed(e -> {
-            originX = e.getSceneX() - textBox.getTranslateX();
-            originY = e.getSceneY() - textBox.getTranslateY();
-
-            textBox.toFront();
-        });
-
-        textBox.setOnMouseDragged(e -> {
-            textBox.setTranslateX(e.getSceneX() - originX);
-            textBox.setTranslateY(e.getSceneY() - originY);
-
-            textBox.setText(textBox.getTranslateX() + " " + textBox.getTranslateY());
-            textBox.toFront();
-        });
+        makeDraggable(textBox);
 
         textBox.relocate(this.startX, this.startY);
-        this.drawtext = false;
-
-        zoomPane.getChildren().addAll(textBox);
+        canvasPane.getChildren().addAll(textBox);
     }
 
     private void drawOvalEffect() {
@@ -323,7 +342,7 @@ public class BoardController implements Initializable {
         gcF.setLineWidth(10);
 
         gcF.clearRect(0, 0, this.canvasW, this.canvasH);
-        gcF.setFill(Color.BLACK);
+        gcF.setFill(Color.AQUA);
         gcF.fillOval(startX, startY, this.wh, this.hg);
        }
 
@@ -333,7 +352,7 @@ public class BoardController implements Initializable {
         gcF.setLineWidth(10);
 
         gcF.clearRect(0, 0, this.canvasW, this.canvasH);
-        gcF.setFill(Color.GRAY);
+        gcF.setFill(Color.AQUA);
         gcF.fillRect(startX, startY, this.wh, this.hg);
     }
 

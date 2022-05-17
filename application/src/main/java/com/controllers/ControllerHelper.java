@@ -21,15 +21,14 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ControllerHelper {
     
-    public static void switchViews(String fxml, String title, Label label, int height, int width) {
-        Stage stage = (Stage) label.getScene().getWindow();
+    // Helper function to load specific views
+    public static void switchViews(String fxml, String title, Stage stage) {
         try {
+            // Loads FXML file for provided view
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
             Parent root = loader.load();
 
-            // stage.setHeight(height);
-            // stage.setWidth(width);
-            // stage.setTitle(title);
+            // Setting stage properties
             stage.setScene(new Scene(root));
             stage.sizeToScene();
         } catch (Exception e) {
@@ -38,38 +37,62 @@ public class ControllerHelper {
         
     }
 
-    public static void initStage(String title, Label label, int height, int width, Image image) {
-        Stage stage = (Stage) label.getScene().getWindow();
+    // Helper function to load sign up page and initialize its view
+    public static void initStage(String fxml, String title, Stage stage, Image image, User currentUser, String type) {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("SignUp.fxml"));
+            // Loads FXML file for the sign up page
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
             Parent root = loader.load();
 
-            SignUpController signUp = loader.getController();
-            signUp.initializeImg(image);
+            if(fxml.toLowerCase().equals("signup")) {
+                // Initializes sign up page 
+                SignUpController signUp = loader.getController();
+                signUp.initializeImg(image);   
+
+            } else if(fxml.toLowerCase().equals("profileedit")) {
+                ProfileEditorController profileEdit = loader.getController();
+                profileEdit.initializeSession(image, currentUser, stage);
+            } else if(fxml.toLowerCase().equals("newcanvas")) {
+                NewCanvasController newCanvas = loader.getController();
+                newCanvas.initializeSession(currentUser, stage);
+            }
+
+            if(type.equals("popup")) {
+                // Setting popup stage properties
+                Stage popUp = new Stage();
+                popUp.initModality(Modality.APPLICATION_MODAL);
+                popUp.setTitle(title);
+                popUp.setResizable(false);
+                popUp.setScene(new Scene(root));
+                popUp.sizeToScene();
+                popUp.show();
+            } else if(type.equals("main")) {
+                // Setting stage properties
+                stage.setScene(new Scene(root));
+                stage.sizeToScene();
+            }
             
-            // stage.setTitle(title);
-            // stage.setHeight(height);
-            // stage.setWidth(width);
-            stage.setScene(new Scene(root));
-            stage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
         }
         
     }
 
-    public static void initStage(String title, int height, int width, User user, Stage stage, int canvasHeight, int canvasWidth, boolean canvasActive) {
+    // Helper function to load canvas page and initialize its view
+    public static void initStage(String title, User user, Stage stage, int canvasHeight, int canvasWidth, boolean canvasActive) {
         try {
+            //Loads FXML file for the canvas page
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("Board.fxml"));
             Parent root = loader.load();
 
+            // Initializes main canvas UI with the properties
             BoardController board = loader.getController();
-            board.initializeSession(user, canvasHeight, canvasWidth, canvasActive);
+            board.initializeSession(user, stage, canvasHeight, canvasWidth, canvasActive);
 
+            // Setting stage properties
             stage.setTitle(title);
-            stage.setHeight(height);
-            stage.setWidth(width);
             stage.setScene(new Scene(root));
+            stage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
         }

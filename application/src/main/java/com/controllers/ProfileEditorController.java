@@ -58,7 +58,7 @@ public class ProfileEditorController implements Initializable {
             Stage thisStage = (Stage) usersName.getScene().getWindow();
         if(success) {
             ControllerHelper.errorMessage("Your profile has been updated", thisStage);
-            ControllerHelper.initStage("Canvas", 720, 1000, this.currentUser, this.currentSession, 500, 500, false);
+            ControllerHelper.initStage("Canvas", this.currentUser, this.currentSession, 500, 500, false);
         } else {
             ControllerHelper.errorMessage("An error occured, please try again", thisStage);
         }

@@ -67,7 +67,7 @@
                       </Menu>
                     </menus>
                   </MenuBar>
-                  <Button focusTraversable="false" mnemonicParsing="false" text="Log Out" GridPane.columnIndex="5" />
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.columnIndex="5" />
                   <Button focusTraversable="false" mnemonicParsing="false" onAction="#profilePopUp" text="Profile" GridPane.columnIndex="4" />
                   <Label fx:id="nameLabel" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="130.0" text="FirstName LastName" GridPane.columnIndex="3" />
                   <ImageView fx:id="profilePicture" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
@@ -95,7 +95,7 @@
               </rowConstraints>
                <children>
                   <MenuBar prefHeight="996.0" prefWidth="100.0" style="-fx-border-color: lightgray;" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
-                  <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="Image" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addImage" prefHeight="70.0" prefWidth="70.0" text="Image" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                   <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#rectBrush" prefHeight="70.0" prefWidth="70.0" text="Rect" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                   <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#circleBrush" prefHeight="70.0" prefWidth="70.0" text="Circle" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
                   <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#canvasColor" prefHeight="70.0" prefWidth="70.0" text="Canvas" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />

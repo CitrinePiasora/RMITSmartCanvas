@@ -15,7 +15,7 @@ public class User {
     private String lastName = "";
     private String hashedPassword = "";
     private BufferedImage image;
-
+    
     public User(String username, String firstName, String lastName, String hashedPassword, BufferedImage image) {
         this.username = username;
         this.firstName = firstName;

@@ -27,8 +27,9 @@ public class LoginController {
 
     @FXML
     private void switchToSignUp() throws IOException {
+        Stage stage = (Stage) newUser.getScene().getWindow();
         Image image = SwingFXUtils.toFXImage(ImageIO.read(new File("default.jpg")), null);
-        ControllerHelper.initStage("Create a user", newUser, 550, 385, image);
+        ControllerHelper.initStage("SignUp", "Create a user", stage, image, null, "main");
     }
 
     @FXML
@@ -40,7 +41,7 @@ public class LoginController {
             for(int i = 0; i < userList.size(); i++) {
                 if(userList.get(i).getUsername().equals(username)) {
                     Stage stage = (Stage) newUser.getScene().getWindow();
-                    ControllerHelper.initStage("Canvas",  720, 1000, userList.get(i), stage, 500, 500, false);
+                    ControllerHelper.initStage("Canvas", userList.get(i), stage, 500, 500, false);
 
                 }
             }

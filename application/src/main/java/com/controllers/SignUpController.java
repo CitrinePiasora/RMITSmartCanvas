@@ -47,11 +47,11 @@ public class SignUpController implements Initializable {
     
     @FXML
     private void closeButton() throws IOException {
+        Stage stage = (Stage) createdMsg.getScene().getWindow();
         if(this.currentUser != null) {
-            Stage stage = (Stage) createdMsg.getScene().getWindow();
-            ControllerHelper.initStage("Canvas", 720, 1000, currentUser, stage, 500, 500, false);
+            ControllerHelper.initStage("Canvas", currentUser, stage, 500, 500, false);
         } else {
-            ControllerHelper.switchViews("Login", "welcome to SmartCanvas!", createdMsg, 295, 531);
+            ControllerHelper.switchViews("Login", "welcome to SmartCanvas!", stage);
         }
     }
 

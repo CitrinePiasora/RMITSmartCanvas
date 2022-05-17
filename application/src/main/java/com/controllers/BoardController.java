@@ -1,6 +1,7 @@
 package com.controllers;
 
 import java.io.File;
+import java.lang.ModuleLayer.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
@@ -10,11 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -22,7 +20,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.image.WritableImage;
@@ -34,7 +31,6 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import java.awt.image.RenderedImage;
 
-import com.application.Main;
 import com.models.User;
 
 public class BoardController implements Initializable {
@@ -50,10 +46,11 @@ public class BoardController implements Initializable {
     @FXML private Canvas FXCanvas;
 
     private User currentUser;
+    private Stage currentSession;
     private GraphicsContext gcF;
     private double percentageCalc = 1.0;
     private int canvasH, canvasW;
-    private boolean drawoval = false, drawrectangle = false, drawtext = false;
+    private boolean drawoval = false, drawrectangle = false, drawtext = false, drawImage = false;
     double startX, startY, lastX, lastY, originX, originY;
     double wh, hg;
 
@@ -63,7 +60,7 @@ public class BoardController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
     }
     
-    public void initializeSession(User user, int canvasHeight, int canvasWidth, boolean canvasActive) {
+    public void initializeSession(User user, Stage currentSession, int canvasHeight, int canvasWidth, boolean canvasActive) {
         profilePicture.setImage(user.getImage());
         nameLabel.setText(user.getFullName());
         
@@ -85,14 +82,15 @@ public class BoardController implements Initializable {
 
         // Initialize session
         this.currentUser = user; 
-        
+        this.currentSession = currentSession;
 
+        // Adds a listener to the slider in order to change zoom level of canvas
         zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
                 double sliderValue = (double) zoomSlider.getValue();
 
-                // logic that calculates the current zoom %
+                // Logic that calculates the current zoom %
                 if(sliderValue > 0.0) {
                     percentageCalc = 1.0 + (sliderValue / 100.0);
                     zoomPercent.setText("Zoom: " + Integer.toString((int) sliderValue) + "%");
@@ -104,7 +102,7 @@ public class BoardController implements Initializable {
                     zoomPercent.setText("Zoom: 0%");
                 }
 
-                // code that resizes elements based on the calculated zoom %
+                // Code that resizes elements based on the calculated zoom %
                 ObservableList<Node> canvasElements = zoomPane.getChildren();
                 for(Node element : canvasElements) {
                     element.setScaleX(percentageCalc);
@@ -115,51 +113,17 @@ public class BoardController implements Initializable {
         });
     }
 
-    @FXML
+    @FXML // FX Function, when profile button is pressed...
     public void profilePopUp(ActionEvent event) {
-        try {
-            Stage popUp = new Stage();
-            Stage currentStage = (Stage) profilePicture.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("ProfileEdit.fxml"));
-            Parent root = loader.load();
-
-            ProfileEditorController profileEdit = loader.getController();
-            profileEdit.initializeSession(profilePicture.getImage(), this.currentUser, currentStage);
-
-            popUp.initModality(Modality.APPLICATION_MODAL);
-            popUp.setTitle("Profile Management");
-            popUp.setResizable(false);
-            popUp.setScene(new Scene(root));
-            popUp.sizeToScene();
-
-            popUp.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
+        Stage currentStage = (Stage) profilePicture.getScene().getWindow();
+        ControllerHelper.initStage("ProfileEdit", "Profile Management", currentStage, profilePicture.getImage(), currentUser, "popup");
     }
 
 
-    @FXML
+    @FXML // FX Function, when new canvas is pressed...
     void NewCanvas(ActionEvent event) {
-        try {
-            Stage popUp = new Stage();
-            Stage currentStage = (Stage) profilePicture.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("NewCanvas.fxml"));
-            Parent root = loader.load();
-
-            NewCanvasController newCanvas = loader.getController();
-            newCanvas.initializeSession(this.currentUser, currentStage);
-
-            popUp.initModality(Modality.APPLICATION_MODAL);
-            popUp.setTitle("New Canvas");
-            popUp.setResizable(false);
-            popUp.setScene(new Scene(root));
-
-            popUp.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Stage currentStage = (Stage) profilePicture.getScene().getWindow();
+        ControllerHelper.initStage("NewCanvas", "Canvas Properties", currentStage, profilePicture.getImage(), currentUser, "popup");
     }
 
     @FXML
@@ -174,37 +138,29 @@ public class BoardController implements Initializable {
 
     @FXML
     void saveImage(ActionEvent event) {
-        Stage stage = (Stage) nameLabel.getScene().getWindow();
+        
 
+        // initialize filechooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("PNG files (*.png)", "*.png"));
         
-        File file = fileChooser.showSaveDialog(stage);
+        File file = fileChooser.showSaveDialog(this.currentSession);
 
         if(file != null) {
             try {
-                ObservableList<Node> canvasElements = canvasPane.getChildren();
-
-                canvasPane.setScaleX(1);
-                canvasPane.setScaleY(1);
-                for(Node element : canvasElements) {
-                    element.setScaleX(1);
-                    element.setScaleY(1);
-                }
+                
+                // stores current slider value, sets slider value to 0 to export image properly
+                int currentZoom = (int) zoomSlider.getValue();
+                zoomSlider.setValue(0);
 
                 WritableImage exporting = new WritableImage(canvasW, canvasH);
                 canvasPane.snapshot(null, exporting);
                 RenderedImage exportedFile = SwingFXUtils.fromFXImage(exporting, null);
                 ImageIO.write(exportedFile, "png", file);
 
-
-                canvasPane.setScaleX(percentageCalc);
-                canvasPane.setScaleY(percentageCalc);
-                for(Node element : canvasElements) {
-                    element.setScaleX(percentageCalc);
-                    element.setScaleY(percentageCalc);
-                }
+                // restores old zoom value so the user doesn't see that the zoom had changed while saving
+                zoomSlider.setValue(currentZoom);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -213,26 +169,58 @@ public class BoardController implements Initializable {
     }
 
     @FXML
+    void logOut() {
+        ControllerHelper.switchViews("Login", "Welcome to SmartCanvas", this.currentSession);
+    }
+
+    @FXML
     void circleBrush(ActionEvent event) {
-        drawoval = true;
-        drawrectangle = false;
-        drawtext = false;
+        if(drawoval) {
+            drawoval = false;
+        } else {
+            drawoval = true;
+            drawrectangle = false;
+            drawtext = false;
+            drawImage = false;
+        }
     }
     
     @FXML
     void rectBrush(ActionEvent event) {
-        drawoval = false;
-        drawrectangle = true;
-        drawtext = false;
+        if(drawrectangle) {
+            drawrectangle = false;
+        } else {
+            drawoval = false;
+            drawrectangle = true;
+            drawtext = false;
+            drawImage = false;
+        }
     }
 
     @FXML
     void insertTextBox(ActionEvent event) {
-        drawoval = false;
-        drawrectangle = false;
-        drawtext = true;
+        if(drawtext) {
+            drawtext = false;
+        } else {
+            drawoval = false;
+            drawrectangle = false;
+            drawtext = true;
+            drawImage = false;
+        }
     }
 
+    @FXML
+    private void addImage() {
+        if(drawImage) {
+            drawImage = false;
+        } else {
+            drawoval = false;
+            drawrectangle = false;
+            drawtext = false;
+            drawImage = true;
+        }
+    }
+    
     @FXML
     void canvasColor(ActionEvent Event) {
         canvasPane.setStyle("-fx-background-color: pink; -fx-border-color: gray");
@@ -245,6 +233,8 @@ public class BoardController implements Initializable {
 
         if(drawtext) {
             drawtextBox();
+        } else if(drawImage) {
+            drawImage();
         }
     }
 
@@ -334,6 +324,17 @@ public class BoardController implements Initializable {
 
         textBox.relocate(this.startX, this.startY);
         canvasPane.getChildren().addAll(textBox);
+    }
+
+    private void drawImage() {
+        ImageView img = new ImageView();
+        ControllerHelper.imageChooser(nameLabel, img);
+        img.toFront();
+
+        makeDraggable(img);
+
+        img.relocate(this.startX, this.startY);
+        canvasPane.getChildren().addAll(img);
     }
 
     private void drawOvalEffect() {

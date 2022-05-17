@@ -32,7 +32,7 @@ public class NewCanvasController implements Initializable {
     void createCanvas(ActionEvent event) {
         Stage primaryStage = (Stage) widthField.getScene().getWindow();
         try {
-            ControllerHelper.initStage("Canvas", 720, 1000, this.currentUser, this.currentSession, Integer.parseInt(heightField.getText()), Integer.parseInt(widthField.getText()), true);
+            ControllerHelper.initStage("Canvas", this.currentUser, this.currentSession, Integer.parseInt(heightField.getText()), Integer.parseInt(widthField.getText()), true);
             primaryStage.close();
         } catch (Exception e) {
             ControllerHelper.errorMessage("Error, invalid height and width", primaryStage);

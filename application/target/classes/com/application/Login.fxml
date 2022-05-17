@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="295.0" prefWidth="531.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.LoginController">
+   <children>
+      <AnchorPane prefHeight="234.0" prefWidth="600.0">
+         <children>
+            <TextField fx:id="usernameField" layoutX="118.0" layoutY="32.0" prefHeight="26.0" prefWidth="254.0" promptText="Username" />
+            <PasswordField fx:id="passwordField" layoutX="118.0" layoutY="98.0" prefHeight="26.0" prefWidth="254.0" promptText="Password" />
+            <Label layoutX="118.0" layoutY="14.0" text="Username" />
+            <Label layoutX="118.0" layoutY="79.0" text="Password" />
+            <Label fx:id="newUser" focusTraversable="false" layoutX="191.0" layoutY="202.0" onMouseClicked="#switchToSignUp" text="or create a new user" textFill="#5fa1f7" underline="true" />
+            <Button fx:id="signInButton" focusTraversable="false" layoutX="191.0" layoutY="159.0" mnemonicParsing="false" onAction="#signIntoCanvas" text="Sign In" />
+            <Button focusTraversable="false" layoutX="253.0" layoutY="159.0" mnemonicParsing="false" onAction="#closeApp" text="Close" />
+         </children>
+      </AnchorPane>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

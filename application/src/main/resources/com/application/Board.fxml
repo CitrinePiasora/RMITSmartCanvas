@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.BoardController">
+   <children>
+      <BorderPane fx:id="borderPain" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
+         <center>
+            <StackPane fx:id="zoomPane" BorderPane.alignment="CENTER">
+               <children>
+                  <Canvas fx:id="canvas" height="550.0" width="621.0" />
+                  <Rectangle fx:id="canvasBackground" arcHeight="5.0" arcWidth="5.0" fill="#cc4d4d" height="550.0" stroke="TRANSPARENT" strokeType="INSIDE" visible="false" width="621.0" />
+                  <Canvas fx:id="FXCanvas" height="550.0" onMouseDragged="#onMouseDraggedListener" onMouseExited="#onMouseExitedListener" onMousePressed="#onMousePressedListener" onMouseReleased="#onMouseReleaseListener" width="621.0" />
+               </children>
+            </StackPane>
+         </center>
+         <top>
+            <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="594.3999877929688" minWidth="10.0" prefWidth="531.200048828125" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.8" minWidth="10.0" prefWidth="43.39998779296877" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.20001220703125" minWidth="10.0" prefWidth="154.9999877929688" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="325.6000366210937" minWidth="10.0" prefWidth="63.80001220703127" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.20001220703125" minWidth="10.0" prefWidth="73.4000244140625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.20001220703125" minWidth="10.0" prefWidth="38.200024414062455" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <MenuBar prefHeight="120.0" prefWidth="102.0" GridPane.columnSpan="2147483647">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#NewCanvas" text="New Canvas" />
+                              <MenuItem fx:id="clearButton" disable="true" mnemonicParsing="false" onAction="#clearCanvas" text="Clear Canvas" />
+                              <MenuItem fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#saveImage" text="Save As..." />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="Delete Element" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Help">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="About" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+                  <Button focusTraversable="false" mnemonicParsing="false" text="Log Out" GridPane.columnIndex="5" />
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#profilePopUp" text="Profile" GridPane.columnIndex="4" />
+                  <Label fx:id="nameLabel" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="130.0" text="FirstName LastName" GridPane.columnIndex="3" />
+                  <ImageView fx:id="profilePicture" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                     <image>
+                        <Image url="@../../../../../../default.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </GridPane>
+         </top>
+         <left>
+            <GridPane BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <MenuBar prefHeight="996.0" prefWidth="100.0" style="-fx-border-color: lightgray;" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
+                  <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="Image" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#rectBrush" prefHeight="70.0" prefWidth="70.0" text="Rect" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                  <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#circleBrush" prefHeight="70.0" prefWidth="70.0" text="Circle" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                  <Button focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="Canvas" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                  <Button alignment="CENTER" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#insertTextBox" prefHeight="70.0" prefWidth="70.0" text="Text" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+               </children>
+            </GridPane>
+         </left>
+         <right>
+            <GridPane prefHeight="628.0" prefWidth="194.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <MenuBar prefHeight="1029.0" prefWidth="100.0" style="-fx-border-color: lightgray;" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
+               </children>
+            </GridPane>
+         </right>
+         <bottom>
+            <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="774.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.59998779296876" minWidth="10.0" prefWidth="381.59998779296876" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.8" minWidth="10.0" prefWidth="43.00001220703126" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.20001220703125" minWidth="10.0" prefWidth="93.39997558593745" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="325.6000366210937" minWidth="10.0" prefWidth="236.80002441406248" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.20001220703125" minWidth="10.0" prefWidth="38.400073242187545" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.20001220703125" minWidth="10.0" prefWidth="111.19992675781248" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <MenuBar prefHeight="53.0" prefWidth="777.0" style="-fx-border-color: lightgray;" GridPane.columnSpan="2147483647" />
+                  <Slider fx:id="zoomSlider" focusTraversable="false" min="-100.0" GridPane.columnIndex="4" />
+                  <Label fx:id="zoomPercent" text="Zoom: 0%" GridPane.columnIndex="6" />
+               </children>
+            </GridPane>
+         </bottom>
+      </BorderPane>
+   </children>
+</VBox>

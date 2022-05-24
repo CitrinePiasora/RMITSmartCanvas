@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -20,24 +21,13 @@
 <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.BoardController">
    <children>
       <BorderPane minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
-         <center>
-            <StackPane fx:id="zoomPane" BorderPane.alignment="CENTER">
-               <children>
-                  <Pane fx:id="canvasPane" maxHeight="-Infinity" maxWidth="-Infinity" onMousePressed="#onMousePressedListener" prefHeight="550.0" prefWidth="550.0" style="-fx-background-color: white; -fx-border-color: gray;">
-                     <children>
-                        <Canvas fx:id="FXCanvas" height="550.0" onMouseDragged="#FXMouseDrag" onMousePressed="#FXMousePress" onMouseReleased="#FXMouseRelease" opacity="0.25" width="550.0" />
-                     </children>
-                  </Pane>
-               </children>
-            </StackPane>
-         </center>
          <top>
             <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="594.3999877929688" minWidth="10.0" prefWidth="531.200048828125" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.8" minWidth="10.0" prefWidth="43.39998779296877" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.20001220703125" minWidth="10.0" prefWidth="154.9999877929688" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="594.3999877929688" minWidth="10.0" prefWidth="562.4000244140625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.8" minWidth="10.0" prefWidth="43.99997558593748" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.20001220703125" minWidth="10.0" prefWidth="122.9999877929688" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="325.6000366210937" minWidth="10.0" prefWidth="63.80001220703127" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.20001220703125" minWidth="10.0" prefWidth="73.4000244140625" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.20001220703125" minWidth="10.0" prefWidth="38.200024414062455" />
@@ -104,7 +94,7 @@
             </GridPane>
          </left>
          <right>
-            <GridPane prefHeight="628.0" prefWidth="194.0" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="628.0" prefWidth="226.0" BorderPane.alignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
@@ -134,11 +124,26 @@
                </rowConstraints>
                <children>
                   <MenuBar prefHeight="53.0" prefWidth="777.0" style="-fx-border-color: lightgray;" GridPane.columnSpan="2147483647" />
-                  <Slider fx:id="zoomSlider" focusTraversable="false" min="-100.0" GridPane.columnIndex="4" />
+                  <Slider fx:id="zoomSlider" focusTraversable="false" max="300.0" min="-100.0" GridPane.columnIndex="4" />
                   <Label fx:id="zoomPercent" text="Zoom: 0%" GridPane.columnIndex="6" />
                </children>
             </GridPane>
          </bottom>
+         <center>
+            <ScrollPane hvalue="0.5" prefHeight="200.0" prefWidth="200.0" vvalue="0.5" BorderPane.alignment="CENTER">
+               <content>
+                  <StackPane fx:id="zoomPane" prefHeight="800.0" prefWidth="800.0">
+                     <children>
+                        <Pane fx:id="canvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#onMousePressedListener" prefHeight="450.0" prefWidth="450.0" style="-fx-background-color: white; -fx-border-color: gray;" StackPane.alignment="CENTER">
+                           <children>
+                              <Canvas fx:id="FXCanvas" height="450.0" nodeOrientation="INHERIT" onMouseDragged="#FXMouseDrag" onMousePressed="#FXMousePress" onMouseReleased="#FXMouseRelease" opacity="0.25" width="450.0" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+               </content>
+            </ScrollPane>
+         </center>
       </BorderPane>
    </children>
 </VBox>

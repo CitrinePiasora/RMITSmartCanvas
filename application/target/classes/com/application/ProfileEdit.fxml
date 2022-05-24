@@ -15,7 +15,7 @@
       <AnchorPane prefHeight="394.0" prefWidth="610.0">
          <children>
             <Rectangle fx:id="pfpBorder" arcHeight="5.0" arcWidth="5.0" fill="#aeaeae" height="128.0" layoutX="42.0" layoutY="37.0" stroke="#aeaeae" strokeType="INSIDE" width="128.0" />
-            <ImageView fx:id="profile_picture" fitHeight="120.0" fitWidth="120.0" layoutX="46.0" layoutY="41.0" onMouseClicked="#chooseImage" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="profile_picture" fitHeight="120.0" fitWidth="120.0" layoutX="46.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../default.jpg" />
                </image>

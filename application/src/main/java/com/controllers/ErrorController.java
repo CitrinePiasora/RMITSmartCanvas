@@ -14,6 +14,7 @@ public class ErrorController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
     }
 
+    // Initialization function for setting error messages
     public void setErrorMsg(String errorMessage) {
         errorLabel.setText(errorMessage);
     }

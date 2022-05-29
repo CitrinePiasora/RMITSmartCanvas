@@ -710,6 +710,7 @@ public class BoardController implements Initializable {
     //#endregion
 
     //#region: helper functions
+    // TODO: add options for imageview to change the image
     // Helper function that sets current node
     private void setCurrentNode(Group node) {
         this.initChoices = true;
@@ -950,7 +951,7 @@ public class BoardController implements Initializable {
         });
     }
 
-    // TODO: fix resizing random breaking
+    // TODO: fix resizing when rotated
     // Build a corner of the rectangle
     private Rectangle buildCorner (double x, double y) {
 
@@ -1064,6 +1065,18 @@ public class BoardController implements Initializable {
             // Sets startx and starty to minx + 5, miny + 5 and endx, endy to maxx + 5, maxy + 5
             startX = topL.getBoundsInParent().getMinX() + 5; lastX = topR.getBoundsInParent().getMinX() + 5;
             startY = topL.getBoundsInParent().getMinY() + 5; lastY = botR.getBoundsInParent().getMinY() + 5; 
+
+            // Flip values of startx starty with lastx lasty if they're bigger than last
+            if(startX > lastX) {
+                startX += lastX;
+                lastX = startX - lastX;
+                startX = startX - lastX;
+            }
+            if(startY > lastY) {
+                startY += lastY;
+                lastY = startY - lastY;
+                startY = startY - lastY;
+            }
 
             // Calculate the new height and width of the node
             wh = lastX - startX;

@@ -18,7 +18,9 @@ public class NewCanvasController implements Initializable {
 
     // Initialize session variables
     private User currentUser;
-    private Stage currentSession;
+
+    // Initialize controllerhelper
+    private ControllerHelper controlHelper;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -26,7 +28,7 @@ public class NewCanvasController implements Initializable {
 
     // Function to initialize session variables
     public void initializeSession(User currentUser, Stage currentStage) {
-        this.currentSession = currentStage;
+        this.controlHelper = new ControllerHelper(currentStage);
         this.currentUser = currentUser;
     }
 
@@ -36,11 +38,11 @@ public class NewCanvasController implements Initializable {
         Stage popupStage = (Stage) widthField.getScene().getWindow();
         try {
             // Tries to open the canvas with given dimensions, close this popup if successful
-            ControllerHelper.initStage("Canvas", this.currentUser, this.currentSession, Integer.parseInt(heightField.getText()), Integer.parseInt(widthField.getText()), true);
+            controlHelper.initStage("Canvas", this.currentUser, Integer.parseInt(heightField.getText()), Integer.parseInt(widthField.getText()), true);
             popupStage.close();
         } catch (Exception e) {
             // If an exception occurs, create an error popup
-            ControllerHelper.initStage("ErrorPopup", "Error, invalid height and width", popupStage, null, null, "popup");
+            controlHelper.initStage("ErrorPopup", "Error, invalid height and width", null, null, "popup");
         }
     }
 }

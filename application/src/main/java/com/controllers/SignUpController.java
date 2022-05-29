@@ -37,7 +37,9 @@ public class SignUpController implements Initializable {
 
     // initialize session variables
     private User currentUser = null;
-    private Stage currentSession;
+
+    // Initialize controllerhelper
+    private ControllerHelper controlHelper;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -46,24 +48,23 @@ public class SignUpController implements Initializable {
 
     // Initialization function for setting default profile image
     public void initializeImg(Image image, Stage stage) {
-        profile_picture.setImage(image);
-        this.currentSession = stage;
+        this.profile_picture.setImage(image);
+        this.controlHelper = new ControllerHelper(stage);
     }
     
     
     @FXML // FX Function, closes the signup page, if a user was made initializes canvas page, otherwise return to login page
     private void closeButton() throws IOException {
         if(this.currentUser != null) {
-            ControllerHelper.initStage("Canvas", currentUser, this.currentSession, 500, 500, false);
+            controlHelper.initStage("Canvas", currentUser, 500, 500, false);
         } else {
-            ControllerHelper.switchViews("Login", "welcome to SmartCanvas!", this.currentSession);
+            controlHelper.switchViews("Login", "welcome to SmartCanvas!");
         }
     }
 
     @FXML // FX Function that invokes imageChooser helper function to set profile picture
     void chooseImage(MouseEvent event) {
-        Stage stage = (Stage) createdMsg.getScene().getWindow();
-        this.filepath = ControllerHelper.imageChooser(stage, profile_picture);
+        this.filepath = controlHelper.imageChooser(profile_picture);
     }
     
     @FXML // FX Function that creates the user
@@ -89,10 +90,10 @@ public class SignUpController implements Initializable {
         // If any of the required fields (all of em) are empty
         } else if(this.usernameField.getText().equals("") || this.firstNameField.getText().equals("") || this.lastNameField.getText().equals("") || this.passwordField.getText().equals("")){
             // Show error popup telling user to fill all fields
-            ControllerHelper.initStage("ErrorPopup", "Please fill in all fields", this.currentSession, null, null, "popup");
+            controlHelper.initStage("ErrorPopup", "Please fill in all fields", null, null, "popup");
         } else {
             // Show error popup telling user that user already exists
-            ControllerHelper.initStage("ErrorPopup", "User " + usernameField.getText() + " already exists", this.currentSession, null, null, "popup");
+            controlHelper.initStage("ErrorPopup", "User " + usernameField.getText() + " already exists", null, null, "popup");
         }
         
         

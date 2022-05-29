@@ -26,10 +26,18 @@ import com.models.User;
 
 public class ControllerHelper {
     
-    private static Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    private Stage stage;
+
+    public ControllerHelper() {
+    }
+
+    public ControllerHelper(Stage stage) {
+        this.stage = stage;
+    }
 
     // Helper function to load specific views
-    public static void switchViews(String fxml, String title, Stage stage) {
+    public void switchViews(String fxml, String title) {
         try {
             // Loads FXML file for provided view
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
@@ -48,7 +56,7 @@ public class ControllerHelper {
     }
 
     // Helper function to load sign up page and initialize its view
-    public static void initStage(String fxml, String title, Stage stage, Image image, User currentUser, String type) {
+    public void initStage(String fxml, String title, Image image, User currentUser, String type) {
         try {
             // Loads FXML file for the sign up page
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
@@ -93,7 +101,7 @@ public class ControllerHelper {
     }
 
     // Helper function to load canvas page and initialize its view
-    public static void initStage(String title, User user, Stage stage, int canvasHeight, int canvasWidth, boolean canvasActive) {
+    public void initStage(String title, User user, int canvasHeight, int canvasWidth, boolean canvasActive) {
         try {
             //Loads FXML file for the canvas page
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("Board.fxml"));
@@ -104,8 +112,10 @@ public class ControllerHelper {
             board.initializeSession(user, stage, canvasHeight, canvasWidth, canvasActive);
 
             // Setting stage properties
+            Scene scene = new Scene(root);
+            scene.getStylesheets().addAll("https://fonts.googleapis.com/css?family=Sofia", "https://fonts.googleapis.com/css?family=Aclonica", "https://fonts.googleapis.com/css?family=Aldrich", "https://fonts.googleapis.com/css?family=Allura");
             stage.setTitle(title);
-            stage.setScene(new Scene(root));
+            stage.setScene(scene);
             stage.sizeToScene();
             stage.setX((screenBounds.getWidth()  - stage.getWidth()) / 2);
             stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
@@ -115,7 +125,7 @@ public class ControllerHelper {
     }
 
     // Helper function that creates a filechooser window to load in image files
-    public static String imageChooser(Stage stage, ImageView imageView) {
+    public String imageChooser(ImageView imageView) {
         // Initialize filechooser window with jpg and png extensions only
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter filter = new FileChooser.ExtensionFilter("ALL", "*.png", "*.jpg");
@@ -139,5 +149,13 @@ public class ControllerHelper {
             // Returns default image path should any of the steps fail
             return new File("default.jpg").getAbsolutePath();
         }
+    }
+
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }

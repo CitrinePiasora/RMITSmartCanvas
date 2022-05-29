@@ -27,19 +27,26 @@ public class LoginController {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
 
+    // Initialize controllerhelper
+    private ControllerHelper controlHelper = new ControllerHelper();
+    
     @FXML // FX Function, when the new user label is clicked...
     private void switchToSignUp() throws IOException {
-        // Initializes signup page
+        // Initialize current stage
         Stage stage = (Stage) newUser.getScene().getWindow();
+        controlHelper.setStage(stage);
+
+        // Initializes signup page
         Image image = SwingFXUtils.toFXImage(ImageIO.read(new File("default.jpg")), null);
-        ControllerHelper.initStage("SignUp", "Create a user", stage, image, null, "main");
+        controlHelper.initStage("SignUp", "Create a user", image, null, "main");
     }
 
     @FXML // FX Function, when login is pressed...
     private void signIntoCanvas() throws IOException {
-        // Get current stage variable
+        // Initialize current stage
         Stage stage = (Stage) newUser.getScene().getWindow();
-
+        controlHelper.setStage(stage);
+        
         // Get username and hashed password from both fields
         String username = this.usernameField.getText();
         String hashedPassword = UserManagement.hashingAlg(this.passwordField.getText());
@@ -48,10 +55,10 @@ public class LoginController {
         // If login checker helper function returns true
         if(currentUser != null) {
             // Initializes canvas page
-            ControllerHelper.initStage("Canvas", currentUser, stage, 500, 500, false);
+            controlHelper.initStage("Canvas", currentUser, 500, 500, false);
         } else {
             // Creates an error pop up saying that the credentials are wrong
-            ControllerHelper.initStage("ErrorPopup", "Error, invalid login credentials", stage, null, null, "popup");
+            controlHelper.initStage("ErrorPopup", "Error, invalid login credentials", null, null, "popup");
         }
     }
 

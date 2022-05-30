@@ -46,7 +46,6 @@ public class LoginController {
         // Initialize current stage
         Stage stage = (Stage) newUser.getScene().getWindow();
         controlHelper.setStage(stage);
-        
         // Get username and hashed password from both fields
         String username = this.usernameField.getText();
         String hashedPassword = UserManagement.hashingAlg(this.passwordField.getText());

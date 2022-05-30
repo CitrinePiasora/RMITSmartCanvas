@@ -954,18 +954,13 @@ public class BoardController implements Initializable {
     // TODO: fix resizing when rotated
     // Build a corner of the rectangle
     private Rectangle buildCorner (double x, double y) {
-
         // Create the rectangle
         Rectangle r = new Rectangle();
-        r.setX(x);
-        r.setY(y);
-        r.setWidth(10);
-        r.setHeight(10);
-        r.setStroke(Color.rgb(0,0,0,0.75));
+        r.setX(x); r.setY(y);
+        r.setWidth(10); r.setHeight(10);
         r.setFill(Color.LIGHTGRAY);
-        r.setStrokeWidth(1);
-        r.setStrokeType(StrokeType.INSIDE);
         r.setCursor(Cursor.CROSSHAIR);
+        r.setStrokeWidth(1); r.setStroke(Color.rgb(0,0,0,0.75)); r.setStrokeType(StrokeType.INSIDE);
 
         // Initialize originx and originy on being clicked
         r.setOnMousePressed(e -> {
@@ -986,6 +981,9 @@ public class BoardController implements Initializable {
             Rectangle tempRect = new Rectangle();
             tempRect.setX(r.getX()); tempRect.setY(r.getY()); tempRect.setWidth(10); tempRect.setHeight(10);
             tempRect.setTranslateX(newX); tempRect.setTranslateY(newY);
+
+            // currentNode.getChildren().set();
+            // newGroup.getChildren().addAll(node, bottom, top, left, right, botL, botR, topL, topR);
 
             // If current handler is top left handler
             if(r == topL) {  
@@ -1114,19 +1112,11 @@ public class BoardController implements Initializable {
 
     // Helper function to help build the rotation handler
     private Circle rotationHandler(Group node) {
-        // Create rotation circle handler + add it to the group
-        Rotate rotate = new Rotate();
-        node.getTransforms().add(rotate);
-
-        // Get the bounds of the node within parent to initialize rotation pivot in the center of the group
-        Bounds nodeBounds = node.getBoundsInParent();
-        rotate.setPivotX((nodeBounds.getMinX() + nodeBounds.getMaxX() + 10)/2);
-        rotate.setPivotY((nodeBounds.getMinY() + nodeBounds.getMaxY() + 10)/ 2);
-
         // Initialize the visuals of the rotation handler
         Circle handler = new Circle(5);
+        Bounds nodeBounds = node.getChildren().get(0).getBoundsInParent();
         handler.setCenterX((nodeBounds.getMinX() + nodeBounds.getMaxX() + 10)/2);
-        handler.setCenterY(nodeBounds.getMinY() + 5);
+        handler.setCenterY(nodeBounds.getMinY() - 10);
         handler.setFill(Color.LIGHTGRAY);
         handler.setStroke(Color.rgb(0,0,0,0.75));
         handler.setCursor(Cursor.HAND);
@@ -1148,17 +1138,19 @@ public class BoardController implements Initializable {
                 double x1 = originX, y1 = originY, x2 = e.getSceneX(), y2 = e.getSceneY();
 
                 // Initialize px value to calculate dx
-                double px = rotate.getPivotX() + localToScene.getTx();
-                double py = rotate.getPivotY() + localToScene.getTy();
+                double px = ((nodeBounds.getMinX() + nodeBounds.getMaxX())/2) + localToScene.getTx();
+                double py = ((nodeBounds.getMinY() + nodeBounds.getMaxX())/2) + localToScene.getTy();
 
                 // Work out the angle rotated, theta1 being angle from origin and theta2 being angle at current mouse position
                 double th1 = calcHelper.clockAngle(x1, y1, px, py);
                 double th2 = calcHelper.clockAngle(x2, y2, px, py);
-                double angle = rotate.getAngle();
+                double angle = currentNode.getRotate();
                 angle += th2 - th1;
+                angle = angle >= 360 ? angle - 360 : angle; angle = angle < 0 ? 360 + angle : angle;
 
                 // Rotate the node
-                rotate.setAngle(angle);
+                currentNode.setRotate(angle);
+                System.out.println("Angle: " + angle);
 
                 originX = e.getSceneX() - handler.getTranslateX();
                 originY = e.getSceneY() - handler.getTranslateY();
@@ -1309,6 +1301,7 @@ public class BoardController implements Initializable {
         // Create the rotation handler for the new group, add it to the group and initialize the group to make it draggable and current node
         rotCircle = rotationHandler(newGroup);
         newGroup.getChildren().add(rotCircle);
+        newGroup.setRotate(0);
         makeDraggable(newGroup);
         setCurrentNode(newGroup);
 

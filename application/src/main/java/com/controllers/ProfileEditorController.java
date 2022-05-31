@@ -27,10 +27,12 @@ public class ProfileEditorController implements Initializable {
 
     // Initialize session variables
     private User currentUser;
-    private Stage currentSession;
 
     // Initialize filepath as blank
     private String filepath = "";
+
+    // Initialize controllerhelper
+    private ControllerHelper controlHelper;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -40,7 +42,7 @@ public class ProfileEditorController implements Initializable {
     public void initializeSession(Image image, User user, Stage currentSession) {
         profile_picture.setImage(image);   
         this.currentUser = user; 
-        this.currentSession = currentSession;
+        controlHelper = new ControllerHelper(currentSession);
 
         usersName.setText(user.getUsername());
         firstNameField.setText(user.getFirstName());
@@ -50,17 +52,14 @@ public class ProfileEditorController implements Initializable {
     @FXML // FX Function, when select profile picture label is clicked
     void chooseImage(MouseEvent event) {
         // Sets current filepath using the imagechooser helper function
-        this.filepath = ControllerHelper.imageChooser(this.currentSession, profile_picture);
+        this.filepath = controlHelper.imageChooser(profile_picture);
     }
 
     @FXML // FX Function, when ok button is pressed...
     void editProfile(ActionEvent event) {
-        // Creates a stage object for current stage
-        Stage thisStage = (Stage) usersName.getScene().getWindow();
-
         if(firstNameField.getText().equals("") || lastNameField.getText().equals("")) {
             // Shows error popup saying that required fields are empty
-            ControllerHelper.initStage("ErrorPopup", "Please fill in all fields", thisStage, null, null, "popup");
+            controlHelper.initStage("ErrorPopup", "Please fill in all fields", null, null, "popup");
         } else {
             // Sets current user variables to updated parameters
             this.currentUser.setFirstName(firstNameField.getText());
@@ -70,12 +69,12 @@ public class ProfileEditorController implements Initializable {
             boolean success = sqliteConnection.sqliteConnectEditData(this.filepath, firstNameField.getText(), lastNameField.getText(), this.currentUser);
             if(success) {
                 // Shows popup saying update has been completed
-                ControllerHelper.initStage("ErrorPopup", "Your profile has been updated", thisStage, null, null, "popup");
+                controlHelper.initStage("ErrorPopup", "Your profile has been updated", null, null, "popup");
                 // Updates the main stage to reflect changes
-                ControllerHelper.initStage("Canvas", this.currentUser, this.currentSession, 500, 500, false);
+                controlHelper.initStage("Canvas", this.currentUser, 500, 500, false);
             } else {
                 // Shows error popup saying some form of error has occured
-                ControllerHelper.initStage("ErrorPopup", "An error occured, please try again", thisStage, null, null, "popup");
+                controlHelper.initStage("ErrorPopup", "An error occured, please try again", null, null, "popup");
             }
         }
     }

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -125,16 +126,8 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <MenuBar prefHeight="1029.0" prefWidth="100.0" style="-fx-border-color: lightgray;" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="16" GridPane.rowSpan="2147483647" />
                   <Label fx:id="bordColor" text="Border Color" visible="false" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <ComboBox fx:id="bordColorDropdown" disable="true" prefHeight="26.0" prefWidth="125.0" promptText="Border Color" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </ComboBox>
-                  <ComboBox fx:id="FontDropdown" disable="true" layoutX="160.0" layoutY="16.0" prefHeight="26.0" prefWidth="125.0" promptText="Font" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                  <ComboBox fx:id="backgroundDropdown" disable="true" layoutX="148.0" layoutY="53.0" prefHeight="26.0" prefWidth="125.0" promptText="Background" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                  <ComboBox fx:id="textColorDropdown" disable="true" layoutX="148.0" layoutY="128.0" prefHeight="26.0" prefWidth="125.0" promptText="Text Color" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                  <ComboBox fx:id="FontDropdown" disable="true" layoutX="160.0" layoutY="16.0" onAction="#changeFont" prefHeight="26.0" prefWidth="125.0" promptText="Font" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
                   <Label fx:id="borderWidth" text="Border Width" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                   <Label fx:id="backgroundLabel" text="Background" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                   <Label fx:id="textAttributes" text="Attributes" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
@@ -184,24 +177,6 @@
                         <Font size="10.0" />
                      </font>
                   </Button>
-                  <Label fx:id="textHeightLabel" text="Textbox Height" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
-                  <Slider fx:id="textHeight" disable="true" max="500.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
-                     <GridPane.margin>
-                        <Insets left="9.0" right="9.0" />
-                     </GridPane.margin>
-                  </Slider>
-                  <Label fx:id="textWidthLabel" text="Textbox Width" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
-                  <Slider fx:id="textWidth" max="500.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER">
-                     <GridPane.margin>
-                        <Insets left="9.0" right="9.0" />
-                     </GridPane.margin>
-                  </Slider>
-                  <Label fx:id="textRotateLabel" text="Rotate Textbox" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER" />
-                  <Slider fx:id="rotateSlider" max="360.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="11">
-                     <GridPane.margin>
-                        <Insets left="9.0" right="9.0" />
-                     </GridPane.margin>
-                  </Slider>
                   <TextField fx:id="textInput" disable="true" onAction="#setLabelText" prefHeight="26.0" prefWidth="125.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets left="17.0" right="17.0" />
@@ -213,6 +188,10 @@
                         <Insets left="17.0" right="17.0" />
                      </GridPane.margin>
                   </TextField>
+                  <ColorPicker fx:id="borderColorPicker" disable="true" onAction="#changeBorderColor" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <ColorPicker fx:id="bgColorPicker" disable="true" onAction="#changeBGColor" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                  <ColorPicker fx:id="textColorPicker" disable="true" onAction="#changeTextColor" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                  <Button fx:id="changeImageBtn" disable="true" mnemonicParsing="false" onAction="#changeImage" prefHeight="26.0" prefWidth="125.0" text="Change Image" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
          </right>
@@ -242,7 +221,7 @@
                <content>
                   <StackPane fx:id="zoomPane" prefHeight="800.0" prefWidth="800.0">
                      <children>
-                        <Pane fx:id="canvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#onMousePressedListener" prefHeight="450.0" prefWidth="450.0" style="-fx-background-color: 0xffffffff; -fx-border-color: gray;" StackPane.alignment="CENTER">
+                        <Pane fx:id="canvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="450.0" style="-fx-background-color: 0xffffffff; -fx-border-color: gray;" StackPane.alignment="CENTER">
                            <children>
                               <Canvas fx:id="FXCanvas" height="450.0" nodeOrientation="INHERIT" onMouseDragged="#FXMouseDrag" onMousePressed="#FXMousePress" onMouseReleased="#FXMouseRelease" opacity="0.25" width="450.0" />
                            </children>

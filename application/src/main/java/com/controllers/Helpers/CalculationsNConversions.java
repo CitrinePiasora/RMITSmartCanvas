@@ -7,7 +7,7 @@ import javafx.scene.shape.Line;
 public class CalculationsNConversions {
     
     // Helper function to get the style sheet of the node and replace specific ones with new values
-    public String cssReplacerAppender(Node temp, String toReplace, String value) {
+    public void cssReplacerAppender(Node temp, String toReplace, String value) {
         // Split stylesheet string into string array
         String[] cssStyle = temp.getStyle().split("; ");
 
@@ -43,7 +43,7 @@ public class CalculationsNConversions {
             style += toReplace + " " + value + "; ";
         }
         
-        return style;
+        temp.setStyle(style);
     }
 
     // Helper function to calculate angle from 0 - 360 degrees
@@ -70,13 +70,8 @@ public class CalculationsNConversions {
         return line;
     }
 
-    // Helper function that returns webformat version of color to use in css
+    // Helper function that returns hex by replacing 0x to #
     public String webFormatter(Color colorChosen) {
-        String webFormat = String.format("#%02x%02x%02x",
-                (int) (255 * colorChosen.getRed()),
-                (int) (255 * colorChosen.getGreen()),
-                (int) (255 * colorChosen.getBlue()));
-        
-        return webFormat;
+        return colorChosen.toString().replace("0x", "#");
     }
 }

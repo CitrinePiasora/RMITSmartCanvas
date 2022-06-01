@@ -38,6 +38,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 import java.awt.image.RenderedImage;
 
 import com.application.CanvasElements;
@@ -136,7 +138,7 @@ public class BoardController implements Initializable {
 
         //#region: Initialize Canvas Properties
         this.canvasH = canvasHeight; this.canvasW = canvasWidth;
-        this.canvasPane.setPrefHeight(canvasHeight); this.canvasPane.setPrefWidth(canvasWidth);
+        this.canvasPane.setPrefSize(canvasW, canvasH);
         this.FXCanvas.setHeight(canvasHeight); this.FXCanvas.setWidth(canvasWidth);
         this.canvasPane.setStyle("-fx-border-color: gray; -fx-background-color: " + calcHelper.webFormatter(Color.WHITE) + "; ");
         this.gcF = this.FXCanvas.getGraphicsContext2D();
@@ -238,8 +240,7 @@ public class BoardController implements Initializable {
     @FXML // FX Function, when clear canvas is pressed...
     void clearCanvas(ActionEvent event) {
         // Clears all nodes on the canvaspane, wiping the canvas
-        canvasPane.getChildren().clear();
-        setCurrentNode(null);
+        controlHelper.initStage("Canvas", this.currentUser, canvasH, canvasW, true);
     }
 
     @FXML // FX Function, when delete element is pressed...
@@ -251,6 +252,9 @@ public class BoardController implements Initializable {
 
     @FXML // FX Function, when save as is pressed...
     void saveImage(ActionEvent event) {
+        // Set current node to null to turn off selection box
+        setCurrentNode(null);
+
         // initialize filechooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
@@ -266,6 +270,12 @@ public class BoardController implements Initializable {
                 int currentZoom = (int) zoomSlider.getValue();
                 zoomSlider.setValue(0);
 
+
+                // Initializes the clipping area of the canvas to make sure that elements outside of the canvas are not exported
+                Rectangle canvasClip = new Rectangle(canvasW, canvasH);
+                canvasPane.setClip(canvasClip);
+
+                // Initializes the image to be exported
                 WritableImage exporting = new WritableImage(canvasW, canvasH);
                 canvasPane.snapshot(null, exporting);
                 RenderedImage exportedFile = SwingFXUtils.fromFXImage(exporting, null);
@@ -277,7 +287,7 @@ public class BoardController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }   
     }
 
     @FXML // FX Function, when log out button is pressed...

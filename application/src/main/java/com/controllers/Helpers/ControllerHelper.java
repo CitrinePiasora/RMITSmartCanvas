@@ -142,7 +142,6 @@ public class ControllerHelper {
             // Processes selected file and sets the image of the given imageview with the image
             fileInputStream = new FileInputStream(selectedFile);
             imageView.setImage(new Image(fileInputStream));
-
             return filepath;
         } catch(IOException e) {
             e.printStackTrace();

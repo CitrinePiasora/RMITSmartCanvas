@@ -94,7 +94,7 @@ public class CanvasElements extends Region {
         });
 
         // Switch case to check what shape the selection box will be containing: rectangle, circle, image or text
-        switch (shape) {
+        switch(shape) {
             case "rectangle":
                 rectangle = new Rectangle();
                 rectangle.setFill(Color.AQUA);
@@ -191,7 +191,7 @@ public class CanvasElements extends Region {
         br.setY(height + cornerSize);
 
         // Switch case to check what the current shape is: rectangle, circle, text or image
-        switch (this.shape) {
+        switch(this.shape) {
             case "rectangle":
                 rectangle.setX(cornerSize); rectangle.setY(cornerSize);
                 rectangle.setHeight(height); rectangle.setWidth(width);
@@ -367,7 +367,7 @@ public class CanvasElements extends Region {
     // Sets the color of the current shape
     public void setColor(Color color) {
         // Switch case to check what the current shape is: rectangle, circle or text
-        switch (this.shape) {
+        switch(this.shape) {
             case "rectangle":
                 rectangle.setFill(color);
                 break;
@@ -383,7 +383,7 @@ public class CanvasElements extends Region {
     // Sets the border color of the current shape
     public void setBorderColor(Color color) {
         // Switch case to check what the current shape is: rectangle, circle or text
-        switch (this.shape) {
+        switch(this.shape) {
             case "rectangle":
                 rectangle.setStroke(color);
                 break;
@@ -399,7 +399,7 @@ public class CanvasElements extends Region {
     // Sets the width of the border
     public void setBorderWidth(double width) {
         // Switch case to check what the current shape is: rectangle, circle or text
-        switch (this.shape) {
+        switch(this.shape) {
             case "rectangle":
                 rectangle.setStrokeWidth(width);
                 break;
@@ -485,6 +485,7 @@ public class CanvasElements extends Region {
 
     // Returns the border color of the shape
     public Paint getBorderColor() {
+        // Switch case to check what the current shape is: rectangle, circle or other
         switch(this.shape) {
             case "rectangle":
                 return rectangle.getStroke();
@@ -498,7 +499,7 @@ public class CanvasElements extends Region {
     // Return border width of shape
     public String getBorderWidth() {
         // Switch case to check what the current shape is: rectangle, circle or text
-        switch (this.shape) {
+        switch(this.shape) {
             case "rectangle":
                 return Integer.toString((int) rectangle.getStrokeWidth());
             case "circle":
@@ -509,15 +510,10 @@ public class CanvasElements extends Region {
     }
 
     public void toggleBoundingBox(boolean toggle) {
-        tr.setDisable(toggle); tr.setVisible(!toggle);
-        tl.setDisable(toggle); tl.setVisible(!toggle);
-        br.setDisable(toggle); br.setVisible(!toggle);
-        bl.setDisable(toggle); bl.setVisible(!toggle);
-        top.setDisable(toggle); top.setVisible(!toggle);
-        bottom.setDisable(toggle); bottom.setVisible(!toggle);
-        left.setDisable(toggle); left.setVisible(!toggle);
-        right.setDisable(toggle); right.setVisible(!toggle);
-        rotateCircle.setDisable(toggle); rotateCircle.setVisible(!toggle);
+        for(int i = 1; i < getChildren().size(); i++) {
+            getChildren().get(i).setDisable(toggle);
+            getChildren().get(i).setVisible(!toggle);
+        }
     }
 
     public void setContainedImage() {
